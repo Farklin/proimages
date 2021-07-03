@@ -1,0 +1,39 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+
+    
+    
+
+
+
+   
+
+<div class="container  p-5">
+        <h1>{{title}}</h1> 
+    <div class="row p-5">
+      
+        <div class="col-sm-3">
+            <img class="img-fluid" src="/media/{{src}}" >
+        </div>
+        <div class="col-sm-5">
+            <small>{{date}}</small> 
+
+            <div class="row">
+                <div class="col-sm-6">
+                 <a class="btn btn-danger" href="{% url 'delete_image' id %}"> Удалить </a> 
+                </div>
+                <div class="col-sm-6">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
