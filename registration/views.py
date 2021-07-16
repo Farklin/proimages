@@ -78,12 +78,11 @@ def HadlerCompany(request, company_id):
     catalogs = Catalog.objects.all()
     for catalog in catalogs:
 
-
-        driver.execute_script('''window.open("'''+catalog.url+'''", "_blank");''') 
-        time.sleep(4)
+        driver.get(catalog.url )
+    
 
         for field in FieldCatalog.objects.filter(catalog = catalog): 
-            element = driver.find_element_by_xpath(field.location)[0]
+            element = driver.find_element_by_xpath(field.location)
             element.send_keys(getattr(company, field.value, '').replace('  ', ''))
             # туть 
         
