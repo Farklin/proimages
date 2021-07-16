@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+<table class="table mt-5 ">
+{% for row in context %}
+    <tr>
+        <td>
+            {{row.name_new}}
+        </td>
+        <td>
+            {{row.price_new}}
+        </td>
+        <td>
+            {{row.name_old}}
+        </td>
+        <td>
+            {{row.price_old}}
+        </td>
+        <td>
+            {{row.discrepancy}}
+        </td>
+        <td>
+            {% if row.status == 'match' %}
+            <span class="bg-warning">Cовпадение</span>
+            {% endif %}
+            {% if row.status == 'modified' %}
+            <span class="bg-danger">Изменена</span>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %} 
+</table>
+</div>
+
+{% endblock %} 

@@ -1,0 +1,47 @@
+.chip {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 32px;
+    min-width: 30px;
+    padding: 0 12px;
+    margin-right: 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, .6);
+    cursor: pointer;
+    background-color: #eceff1;
+    border-radius: 16px;
+    -webkit-transition: opacity .3s linear;
+    transition: opacity .3s linear;
+    word-wrap: break-word;
+    text-transform: none;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+#all {
+    width: 100%;
+    height: auto;
+}
+
+.d-flex {
+    display: flex!important;
+    flex-wrap: wrap!important;
+    width: 300px;
+    height: auto;
+    min-height: 100px;
+    align-content: flex-start;
+}
+
+#har {
+    width: 100%;
+    min-height: 300px;
+    height: auto;
+}

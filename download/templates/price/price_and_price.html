@@ -1,0 +1,54 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{context}}
+
+    <form action="{% url 'price_and_price' %}" method="POST" >
+        {% csrf_token %}
+    <div class="row p-5">
+    <div class="col-sm-6" > 
+        <label for="unic-old-price">Уникальный индификатор</label>
+        <select name="name_new" id="unic-new-price" class="form-control"> 
+        
+        {% for column in context.new_price  %}
+            <option value="{{column.id}}">{{column.name}}</option> 
+            
+        {% endfor %}
+        </select>
+        <label for="unic-old-price">Цена</label>
+        <select name="price_new" id="price-new-price" class="form-control"> 
+        
+            {% for column in context.new_price  %}
+                <option value="{{column.id}}">{{column.name}}</option> 
+                
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-6" > 
+        <label for="unic-old-price">Наименование</label>
+        <select name="name_old" id="unic-old-price" class="form-control"> 
+        
+        {% for column in context.old_price  %}
+            <option value="{{column.id}}">{{column.name}}</option> 
+            
+        {% endfor %}
+        </select>
+        <label for="price-old-price">Цена</label>
+        <select name="price_old" id="price-old-price" class="form-control"> 
+        
+            {% for column in context.old_price  %}
+                <option value="{{column.id}}">{{column.name}}</option> 
+                
+            {% endfor %}
+        </select>
+        <input type="hidden" value="{{context.file_new}}" name="file_new"> 
+        <input type="hidden" value="{{context.file_old}}" name="file_old"> 
+        <button type="submit" class="btn btn-primary ">Начать</button>
+    </div>
+    </div>
+    </form>
+
+
+{% endblock %} 

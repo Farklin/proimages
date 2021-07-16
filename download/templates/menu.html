@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container p-5">
+    <a type="button" href="{% url 'import_table' %}" class="btn btn-primary btn-lg btn-block mb-3">Импорт таблицы товаров</a>
+    <a type="button" href="{% url 'save_image_table' %}" class="btn btn-primary btn-lg btn-block mb-3">Сохранение картинок</a>
+    <a type="button" href="{% url 'table_price' %}" class="btn btn-primary btn-lg btn-block mb-3">Изменение цены</a>
+
+
+    <h2>
+        Социальные сети
+    </h2>
+    <a type="button" href="{% url 'social:post' %}" class="btn btn-primary btn-lg btn-block mb-3">Создание постов в соц. сетях</a>
+</div>
+
+
+{% endblock %}

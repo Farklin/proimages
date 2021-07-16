@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container p-5">
+       
+        <a href="{% url 'registration:create_catalog' %}"> Создать каталог </a> 
+        <a href="{% url 'registration:create_company' %}"> Создать компанию </a> 
+    </div>
+
+    <div class="container p-5">
+        <div class="row">
+            <div class="col-sm-6">
+                {% for catalog in context.catalog %}
+                <a href="{% url 'registration:create_field_catalog' catalog.id %}"> {{catalog.url}} </a> <br> 
+                {% endfor %} 
+            </div>
+            <div class="col-sm-6">
+                {% for company in context.company %}
+                <a href="{% url 'registration:view_company' company.id %}"> {{company.url}} </a> <br> 
+                {% endfor %} 
+            </div>
+        </div>
+       
+    </div>
+
+
+{% endblock %}

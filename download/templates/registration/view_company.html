@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container p-5 m-5">
+    {{context.company.url}}<br>
+    {{context.company.phone}}<br>
+    {{context.company.time}}<br>
+    {{context.company.adress}}<br>
+    {{context.company.email}}<br>
+    {{context.company.name_firm}}<br>
+    {{context.company.name_person}}<br>
+    
+</div>
+
+
+<a href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
+
+{% endblock %}

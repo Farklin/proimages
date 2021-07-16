@@ -1,0 +1,239 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<div class="row p-5">
+    <h2>Все характеристики</h2><a class="btn mtb-5" href="{% url 'import_table' %}"> <i class="fa fa-download"></i> Загрузить</a> 
+    <div id="all" class="d-flex"> 
+    {% for c in column %}
+        <div id="{{c.id}}" class="chip">{{c.name}}</div>
+    {% endfor %}
+    </div>
+</div>
+ 
+   <div class="row p-5">
+
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3> Название </h3>
+                   <div class="d-flex border" id='name'></div>
+               </div>
+               <div class="col-sm-6">
+                    <h3> Артику(УИ) </h3>
+                   <div id="unic" class="d-flex border"></div>
+               </div>
+            
+               <div class="col-sm-6">
+                <h3>Описание</h3>
+                   <div id="description"  class="d-flex border"></div>
+               </div>
+               <div class="col-sm-6">
+                <h3>Изображения</h3>
+                   <div id="image"  class="d-flex border"></div>
+               </div>
+            </div>
+        </div>
+        <div class="col-sm-6 ">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <h3>Характеристики</h3>
+                   <div id="har"  class="d-flex border"></div>
+               </div>
+               <div class="col-sm-5 ">
+                <h3>Настройки</h3>
+                <label for="id-category">Главная категория</label>
+                   <input id="id-category" class="form-control" value = '89556' type="text">
+                </div>
+            </div>
+        </div>
+        <div class="row p-5">
+            <div class="col">
+                <button type="button" id="create" class="btn btn-primary btn-lg waves-effect waves-light" style="vertical-align: inherit;">Создать</button>
+            </div>
+            <div class="col">
+                <button type="button" id="downloader-setting" class="btn btn-primary btn-lg waves-effect waves-light" style="vertical-align: inherit;">Загрузить настройки</button>
+            </div>
+           
+        </div>
+            
+   </div>
+
+   <script>
+
+    
+
+    
+    // Сохранение в cookie 
+    function SaveSettingCookie(id_category, mas_cookie_image, mas_cookie_har, mas_cookie_id, mas_cookie_name, mas_cookie_description){
+        if(id_category!=0){
+            $.cookie('id_cookie_category', id_category)
+        }
+        if(mas_cookie_image!=[]){
+            $.cookie('mas_cookie_image', mas_cookie_image)
+        }
+        if(mas_cookie_har!=[]){
+            $.cookie('mas_cookie_har', mas_cookie_har.join())
+        }
+        if(mas_cookie_id!=[]){
+            $.cookie('mas_cookie_id', mas_cookie_id)
+        }
+        if(mas_cookie_name!=[]){
+            $.cookie('mas_cookie_name', mas_cookie_name)
+        }
+        if(mas_cookie_description!=[]){
+            $.cookie('mas_cookie_description', mas_cookie_description)
+        }
+
+    }
+    function DownloadSettingCookie(){
+
+
+        function cookieDownloadFor(name, container)
+        {
+            if($.cookie(name) != null){
+                $.each(decodeURIComponent($.cookie(name)).split(','), 
+                function(index, value)
+                {
+                    $.each($('#all').children(), 
+                    function(i, child){
+                        if(child.innerText == value.trim()){
+                            var elem = child;  
+                            $(container).append(elem); 
+                            console.log(child); 
+                        }
+                    }); 
+                });
+            }
+        }
+
+        function cookieDownload(name, container)
+        {
+            if($.cookie(name) != null){
+                $.each($('#all').children(), 
+                    function(i, child){
+                        if(child.innerText == decodeURIComponent($.cookie(name)).trim()){
+                            var elem = child;  
+                            $(container).append(elem); 
+                        }}); 
+            }
+        }
+
+
+
+        if($.cookie('id_cookie_category') != null){
+           $('#id-category').val($.cookie('id_cookie_category')); 
+        }
+        
+        cookieDownloadFor('mas_cookie_image', '#image'); 
+        cookieDownloadFor('mas_cookie_har', '#har'); 
+        cookieDownload('mas_cookie_name', '#name'); 
+        cookieDownload('mas_cookie_id', '#unic'); 
+        cookieDownload('mas_cookie_description', '#description'); 
+    }
+
+
+
+    </script>
+
+
+    <script>
+
+    $('#all').sortable({
+        connectWith: '.d-flex'
+    });
+    $('#name').sortable({
+        connectWith: '.d-flex',
+    });
+    $('#unic').sortable({
+        connectWith: '.d-flex',
+    });
+    $('#har').sortable({
+        connectWith: '.d-flex',
+    });
+    $('#image').sortable({
+        connectWith: '.d-flex', 
+    });
+    $('#description').sortable({
+        connectWith: '.d-flex',
+    });
+
+
+    var mas_image = []; 
+    var mas_har = []; 
+    var mas_id = []; 
+    var mas_name = []; 
+    var mas_description = []; 
+    var id_category = 0
+
+    var mas_cookie_image = []; 
+    var mas_cookie_har = []; 
+    var mas_cookie_id = []; 
+    var mas_cookie_name = []; 
+    var mas_cookie_description = []; 
+    var id_cookie_category = 0
+
+        
+    const csrf = "{{ csrf_token }}";
+
+    $('#create').click(function(){
+
+       
+
+        $.each($('#image').children() , function(index, value){
+            mas_image.push(value.id); 
+            mas_cookie_image.push(value.innerHTML );
+        });
+
+        $.each($('#name').children() , function(index, value){
+            mas_name.push(value.id);
+            mas_cookie_name.push(value.innerHTML ); 
+        });
+        $.each($('#unic').children() , function(index, value){
+            mas_id.push(value.id); 
+            mas_cookie_id.push(value.innerHTML );
+        });
+        $.each($('#har').children() , function(index, value){
+            mas_har.push(value.id); 
+            mas_cookie_har.push(value.innerText );
+        });
+        $.each($('#description').children() , function(index, value){
+            mas_description.push(value.id); 
+            mas_cookie_description.push(value.innerHTML);
+        });
+        id_category = $('#id-category').val() 
+        id_cookie_category = $('#id-category').val() 
+        
+        $.ajax({
+	      method: "POST", // метод HTTP, используемый для запроса
+	      url: "{% url 'import_product' filename %}", // строка, содержащая URL адрес, на который отправляется запрос
+	      data: { // данные, которые будут отправлены на сервер
+            'csrfmiddlewaretoken':csrf, 
+	        'mas_image': mas_image,
+	        'mas_har': mas_har, 
+            'mas_id':mas_id, 
+            'mas_name': mas_name, 
+            'mas_description': mas_description, 
+            'id_category': id_category, 
+
+	      },
+	     
+        }); 
+
+        SaveSettingCookie(id_cookie_category, mas_cookie_image, mas_cookie_har, mas_cookie_id, mas_cookie_name, mas_cookie_description );
+        
+
+    }); 
+
+$('#downloader-setting').click(function(){
+        DownloadSettingCookie(); 
+}); 
+
+    </script>
+
+
+
+
+{% endblock %}

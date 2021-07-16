@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<form action="{% url 'import_table' %}" class = 'm-5' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="doc" name="excel" multiple>
+    <button class="btn" type="submit">Загрузить</button>
+</form>
+{% if files %}
+<table class="m-5">
+    
+    {% for file in files %}
+    <tr>
+        <td> <a href="{% url 'import_product' file %}">{{file}}.xlsx</a> </td><td> <a class="btn btn-outline-danger btn-sm" href="{% url 'delete_file_xlsx' file %}">Удалить</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

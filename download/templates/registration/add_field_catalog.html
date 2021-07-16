@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1> Каталог: --  {{context.catalog.url}}</h1>
+</div>
+
+<hr>
+<div class="container mt-5" id='form'>
+
+{% for field in context.fields %}
+ 
+    <div class="form-group row">
+        <div class="col-sm-4">   
+            <input class="form-control input-location" value="{{field.location}}"  type="text">
+        </div>
+        <div class="col-sm-4">   
+            <select class="form-control select-name" > 
+
+                {% for item in context.company %}
+                    {% if item == field.value %} 
+                    <option select value="{{item}}"> {{item}}</option>
+                    {% else %}
+                    <option value="{{item}}"> {{item}}</option>
+                    {% endif %}
+                {% endfor %} 
+                </select> 
+             
+        </div>
+        <div class="col-sm-4">   
+            <button id = "delete-input" onclick="AjaxDeleteFindCatalog('{{field.location}}')" class="btn btn-danger p-0"> Удалить </button>
+        </div>
+       
+        </div>
+{% endfor %}
+</div>
+
+
+<div class="container" id='form'>
+
+    <button id="create-input" class="btn btn-primary bg-secondary">
+        Добавить
+    </button>
+    <button id="save-input" class="btn btn-primary bg-secondary">
+        Сохранить
+    </button>
+  
+</div>
+
+<script type="text/javascript">
+    var select = ` 
+    <select class="form-control select-name" > 
+
+        {% for item in context.company %}
+            <option value="{{item}}"> {{item}}</option>
+        {% endfor %} 
+        </select> 
+    
+    
+    `; 
+    $('#create-input').click(function(){
+
+        $('#form').append(`<div class="form-group row">
+            <div class="col-sm-4">   
+                <input class="form-control input-location"  type="text">
+            </div>
+            <div class="col-sm-4">   
+            ` + select + `
+            </div>
+            </div>`); 
+    }); 
+
+</script>
+
+<script type="text/javascript"> 
+     $('#save-input').click(function(){
+         $.each($('.select-name'), function(index, value){
+             var location = $('.input-location')[index].value
+             n = value.options.selectedIndex;  
+             var name = value.options[n].text; 
+             if(location != '')
+             {
+                AjaxAddFindCatalog(location, name); 
+             }
+         })
+     }); 
+
+
+function AjaxAddFindCatalog(location, name)
+{   
+    const csrf = "{{ csrf_token }}";
+    $.ajax({
+	      method: "POST", // метод HTTP, используемый для запроса
+	      url: "{% url 'registration:create_field_catalog' context.catalog.id  %}", // строка, содержащая URL адрес, на который отправляется запрос
+	      data: { // данные, которые будут отправлены на сервер
+            'csrfmiddlewaretoken':csrf, 
+            'location': location, 
+            'name': name,  
+            'status': 'add',
+	      },
+          
+        }); 
+}
+function AjaxDeleteFindCatalog(location)
+{   
+    const csrf = "{{ csrf_token }}";
+    $.ajax({
+	      method: "POST", // метод HTTP, используемый для запроса
+	      url: "{% url 'registration:create_field_catalog' context.catalog.id  %}", // строка, содержащая URL адрес, на который отправляется запрос
+	      data: { // данные, которые будут отправлены на сервер
+            'csrfmiddlewaretoken':csrf, 
+            'location': location, 
+            'status': 'delete', 
+	      },
+
+        }); 
+
+}
+
+</script>
+ 
+
+
+{% endblock %}

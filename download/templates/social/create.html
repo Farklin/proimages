@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container p-5">
+
+<form action="{% url 'social:post' %}" class = 'm-5' method="POST">
+    {% csrf_token %}
+    <input class ="form-control" placeholder="URL страницы dkv33.ru" type="text" name='url'> 
+    <button class="btn" type="submit">Создать пост</button>
+</form>
+
+
+<div class="container">
+    {{context|safe}}
+</div>
+
+
+    
+</div>
+
+{% endblock %}

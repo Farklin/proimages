@@ -1,0 +1,19 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<form action="{% url 'table_price' %}" class = 'm-5' method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="">Новая цена</label>
+    <input type="file" id="doc" name="new_price_file" multiple>
+    <label for="">Старая цена</label>
+    <input type="file" id="doc" name="old_price_file" multiple>
+    <button class="btn" type="submit">Сравнить</button>
+</form>
+
+
+{% endblock %}
