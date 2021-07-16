@@ -33,4 +33,5 @@ class Company(models.Model):
     email = models.CharField(max_length=255, verbose_name = 'Email', default=None, blank=True, null=True)
     name_firm = models.CharField(max_length=255, verbose_name = 'Название фирмы', default=None, blank=True, null=True)
     name_person = models.CharField(max_length=255, verbose_name = 'Ваше имя', default=None, blank=True, null=True)
+    password = models.CharField(max_length=255, verbose_name = 'Пароль', default=None, blank=True, null=True)
 

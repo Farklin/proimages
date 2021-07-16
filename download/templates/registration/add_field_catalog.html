@@ -20,7 +20,7 @@
 
                 {% for item in context.company %}
                     {% if item == field.value %} 
-                    <option select value="{{item}}"> {{item}}</option>
+                    <option selected="selected" value="{{item}}"> {{item}}</option>
                     {% else %}
                     <option value="{{item}}"> {{item}}</option>
                     {% endif %}

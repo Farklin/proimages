@@ -8,6 +8,7 @@ from webdriver_manager import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+import time
 
 def index(request):
 
@@ -72,18 +73,20 @@ def CreataFieldCatalog(request, catalog_id):
 
 def HadlerCompany(request, company_id): 
     driver = webdriver.Chrome(ChromeDriverManager().install())
+    company = Company.objects.get(id = company_id)
 
     catalogs = Catalog.objects.all()
     for catalog in catalogs:
 
 
-        driver.get(catalog.url)
-        
-        for field in FieldCatalog.objects.filter(catalog = catalog): 
-            element = driver.find_element_by_xpath(field.location)
-            element.send_keys()
-            # туть 
+        driver.execute_script('''window.open("'''+catalog.url+'''", "_blank");''') 
+        time.sleep(4)
 
+        for field in FieldCatalog.objects.filter(catalog = catalog): 
+            element = driver.find_element_by_xpath(field.location)[0]
+            element.send_keys(getattr(company, field.value, '').replace('  ', ''))
+            # туть 
+        
 
 
     return redirect('registration:home')
