@@ -10,10 +10,12 @@
     {{context.company.email}}<br>
     {{context.company.name_firm}}<br>
     {{context.company.name_person}}<br>
-    
+    {{context.company.short_description}}<br>
+    {{context.company.description}}<br>
+
 </div>
 
-
-<a href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
-
+<div class="container"> 
+    <a class='btn btn-success' href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
+</div> 
 {% endblock %}

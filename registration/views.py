@@ -55,7 +55,7 @@ def CreataFieldCatalog(request, catalog_id):
                 field.save()
 
         elif status == 'delete': 
-            field = FieldCatalog.objects.get(location = location)
+            field = FieldCatalog.objects.get(id = location)
             field.delete()
 
             
@@ -76,15 +76,18 @@ def HadlerCompany(request, company_id):
     company = Company.objects.get(id = company_id)
 
     catalogs = Catalog.objects.all()
-    for catalog in catalogs:
-
+    for index , catalog in enumerate(catalogs):
+        driver.execute_script("window.open()")
+        driver.switch_to.window(driver.window_handles[index+1])
         driver.get(catalog.url )
     
 
         for field in FieldCatalog.objects.filter(catalog = catalog): 
             element = driver.find_element_by_xpath(field.location)
             element.send_keys(getattr(company, field.value, '').replace('  ', ''))
-            # туть 
+        
+        
+
         
 
 

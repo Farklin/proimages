@@ -34,4 +34,8 @@ class Company(models.Model):
     name_firm = models.CharField(max_length=255, verbose_name = 'Название фирмы', default=None, blank=True, null=True)
     name_person = models.CharField(max_length=255, verbose_name = 'Ваше имя', default=None, blank=True, null=True)
     password = models.CharField(max_length=255, verbose_name = 'Пароль', default=None, blank=True, null=True)
+    short_description   = models.TextField(max_length=255, verbose_name = 'Короткое описание', default=None, blank=True, null=True)
+    description  = models.TextField(max_length=1000, verbose_name = 'Полное описание', default=None, blank=True, null=True)
+
+
 
