@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 
 from registration.forms import CatalogForm, CompanyForm
@@ -84,14 +85,31 @@ def HadlerCompany(request, company_id):
 
         for field in FieldCatalog.objects.filter(catalog = catalog): 
             element = driver.find_element_by_xpath(field.location)
+            element.clear() 
             element.send_keys(getattr(company, field.value, '').replace('  ', ''))
         
-        
-
-        
-
-
+    
     return redirect('registration:home')
+
+
+def CheckHadler(request, catalog_id): 
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    try:
+        catalog = Catalog.objects.get(id = catalog_id)
+        driver.get(catalog.url )
+
+        for field in FieldCatalog.objects.filter(catalog = catalog): 
+            element = driver.find_element_by_xpath(field.location)
+            element.clear() 
+            element.send_keys('Тест')
+        return HttpResponse('ОК')
+
+    except Exception as e: 
+        return HttpResponse(e)
+
+    
+
+
 
 
 def CreateCompany(request):

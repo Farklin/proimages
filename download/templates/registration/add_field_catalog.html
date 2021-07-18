@@ -39,13 +39,23 @@
 
 <div class="container" id='form'>
 
-    <button id="create-input" class="btn btn-primary bg-secondary">
+    <button id="create-input" class="btn ">
         Добавить
     </button>
-    <button id="save-input" class="btn btn-primary bg-secondary">
+    <button id="save-input" class="btn btn-primary">
         Сохранить
     </button>
+    <button id="check-hadler" onclick ="AjaxCheckhadler()" class="btn btn-success">Проверка</button>
+        
   
+</div>
+
+
+<div class="container mt-5" id='form'>
+
+    <iframe src="{{context.catalog.url}}" style="width:100%; height:800px;">
+    Ваш браузер не поддерживает плавающие фреймы!
+    </iframe>
 </div>
 
 <script type="text/javascript">
@@ -117,6 +127,26 @@ function AjaxDeleteFindCatalog(location)
         }); 
 
 }
+
+function AjaxCheckhadler()
+{    
+    
+    $('#check-hadler').css({'display' : 'none'});
+
+    const csrf = "{{ csrf_token }}";
+    $.ajax({
+	      method: "GET", // метод HTTP, используемый для запроса
+	      url: "{% url 'registration:check_hadler' context.catalog.id  %}", // строка, содержащая URL адрес, на который отправляется запрос
+          success: function(data){
+            alert(data); 
+            $('#check-hadler').css({'display' : 'block'});
+          }, 
+
+        }); 
+    
+
+}
+
 
 </script>
  
