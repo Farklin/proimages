@@ -77,12 +77,14 @@ def HadlerCompany(request, company_id):
     company = Company.objects.get(id = company_id)
 
     catalogs = Catalog.objects.all()
+    i = 0 
     for index , catalog in enumerate(catalogs):
         if catalog.status:
+            
             driver.execute_script("window.open()")
-            driver.switch_to.window(driver.window_handles[index+1])
+            driver.switch_to.window(driver.window_handles[i+1])
             driver.get(catalog.url )
-        
+            i+=1
 
             for field in FieldCatalog.objects.filter(catalog = catalog): 
                 element = driver.find_element_by_xpath(field.location)
