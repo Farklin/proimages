@@ -78,15 +78,16 @@ def HadlerCompany(request, company_id):
 
     catalogs = Catalog.objects.all()
     for index , catalog in enumerate(catalogs):
-        driver.execute_script("window.open()")
-        driver.switch_to.window(driver.window_handles[index+1])
-        driver.get(catalog.url )
-    
+        if catalog.status:
+            driver.execute_script("window.open()")
+            driver.switch_to.window(driver.window_handles[index+1])
+            driver.get(catalog.url )
+        
 
-        for field in FieldCatalog.objects.filter(catalog = catalog): 
-            element = driver.find_element_by_xpath(field.location)
-            element.clear() 
-            element.send_keys(getattr(company, field.value, '').replace('  ', ''))
+            for field in FieldCatalog.objects.filter(catalog = catalog): 
+                element = driver.find_element_by_xpath(field.location)
+                element.clear() 
+                element.send_keys(getattr(company, field.value, '').replace('  ', ''))
         
     
     return redirect('registration:home')
@@ -108,8 +109,12 @@ def CheckHadler(request, catalog_id):
         return HttpResponse(e)
 
     
-
-
+def StatusCatalog(request, catalog_id):  
+    catalog = Catalog.objects.get(id = catalog_id)
+    catalog.status = not catalog.status
+    catalog.save()
+    
+    return HttpResponse(catalog.status)
 
 
 def CreateCompany(request):

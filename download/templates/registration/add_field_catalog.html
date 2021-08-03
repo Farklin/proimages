@@ -46,7 +46,8 @@
         Сохранить
     </button>
     <button id="check-hadler" onclick ="AjaxCheckhadler()" class="btn btn-success">Проверка</button>
-        
+    <label for="check_status"> Требуется обрабатывать</label>
+    <input type="checkbox" {% if context.catalog.status %} checked  {% endif %} id="check_status">    
   
 </div>
 
@@ -95,6 +96,14 @@
              }
          })
      }); 
+
+    $('#check_status').on('click', function () {
+    if ( $(this).is(':checked') ) {
+        AjaxEditStatus('True') 
+    } else {
+        AjaxEditStatus('False') 
+    }
+})
 
 
 function AjaxAddFindCatalog(location, name)
@@ -146,6 +155,25 @@ function AjaxCheckhadler()
     
 
 }
+
+function AjaxEditStatus(status)
+{   /* изменение статуса каталога */ 
+    const csrf = "{{ csrf_token }}";
+    $.ajax({
+	      method: "GET", // метод HTTP, используемый для запроса
+	      url: "{% url 'registration:status_catalog' context.catalog.id  %}", // строка, содержащая URL адрес, на который отправляется запрос
+	      data: { // данные, которые будут отправлены на сервер
+            'csrfmiddlewaretoken':csrf, 
+	      },
+         
+        }); 
+
+}
+
+
+
+
+
 
 
 </script>

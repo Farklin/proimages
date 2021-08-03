@@ -13,4 +13,5 @@ urlpatterns = [
     path('view-company/<int:company_id>', views.ViewCompany, name='view_company'), 
     path('hadler-company/<int:company_id>', views.HadlerCompany, name='hadler_company'), 
     path('check-hadler/<int:catalog_id>', views.CheckHadler, name='check_hadler'), 
+    path('status-catalog/<int:catalog_id>', views.StatusCatalog, name='status_catalog'), 
 ]

@@ -10,7 +10,7 @@ class Catalog(models.Model):
         verbose_name_plural = 'Каталоги'
 
     url = models.CharField(max_length=255, verbose_name = 'URL Сайта', blank=True, null=False)
-
+    status = models.BooleanField(default=False)
 
 class FieldCatalog(models.Model):
     class Meta:
@@ -36,6 +36,7 @@ class Company(models.Model):
     password = models.CharField(max_length=255, verbose_name = 'Пароль', default=None, blank=True, null=True)
     short_description   = models.TextField(max_length=255, verbose_name = 'Короткое описание', default=None, blank=True, null=True)
     description  = models.TextField(max_length=1000, verbose_name = 'Полное описание', default=None, blank=True, null=True)
+    
 
 
 

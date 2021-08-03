@@ -21,6 +21,7 @@
                 <tr> 
                     <td> 
                         <a href="{% url 'registration:create_field_catalog' catalog.id %}" class="w-25"> {{catalog.url}} </a>
+                        <input class="checkStatusCatalog" value ='{% url "registration:status_catalog" catalog.id  %}'  {% if catalog.status %} checked  {% endif %}  type="checkbox"> </a> 
                     </td>
                 </tr> 
                 {% endfor %} 
@@ -45,5 +46,17 @@
        
     </div>
 
+
+<script> 
+    
+
+$('.checkStatusCatalog').click(function(){
+    $.ajax({
+        url: $(this).val(),
+        method: 'GET',
+    })
+}); 
+    
+</script>
 
 {% endblock %}

@@ -3,18 +3,46 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container-fluid">
 <table class="table mt-5 ">
+    <tr> 
+        <th>
+           ID товара
+        </th>
+        
+        <th>
+            Уникальное значение(новое)
+        </th>
+        <th>
+            Цена (новое)
+        </th>
+        <th>
+            Уникальное значение(старая)
+        </th>
+        <th>
+            Цена (старое)
+        </th>
+        <th>
+            Итоговая цена разница
+        </th>
+    </tr>
+
 {% for row in context %}
-    <tr>
+    <tr id ="row_{{row.id}}{{row.name_new}}" >
         <td>
-            {{row.name_new}}
+            {{row.id}}
+        
+        </td>
+        <td>
+            {{row.all_name_new}}
+            <small>  {{row.name_new}} </small>
         </td>
         <td>
             {{row.price_new}}
         </td>
         <td>
-            {{row.name_old}}
+            {{row.all_name_old}}
+            <small>  {{row.name_old}}</small>
         </td>
         <td>
             {{row.price_old}}
@@ -30,9 +58,19 @@
             <span class="bg-danger">Изменена</span>
             {% endif %}
         </td>
+        <td>
+            <button type="button" class="btn btn-primary" onclick="deleteRow('{{row.id}}{{row.name_new}}')" > Удалить </button>
+        </td>
     </tr>
+
+
 {% endfor %} 
 </table>
 </div>
-
+<script> 
+    function deleteRow(id)
+    {
+        $('#row_' + id).remove(); 
+    }
+</script>
 {% endblock %} 

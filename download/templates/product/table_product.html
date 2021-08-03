@@ -5,14 +5,17 @@
 
 
 <div class="row p-5">
+    *** Двойное нажатие удаляет характеристику
     <h2>Все характеристики</h2><a class="btn mtb-5" href="{% url 'import_table' %}"> <i class="fa fa-download"></i> Загрузить</a> 
     <div id="all" class="d-flex"> 
     {% for c in column %}
-        <div id="{{c.id}}" class="chip">{{c.name}}</div>
+        <div id="{{c.id}}" class="chip chip-outline">{{c.name}}</div>
     {% endfor %}
     </div>
 </div>
- 
+<div class="col">
+    <button type="button" id="moving-har" class="btn btn-primary btn-lg waves-effect waves-light" style="vertical-align: inherit;">Перенести</button>
+</div>
    <div class="row p-5">
 
         <div class="col-sm-6">
@@ -121,7 +124,7 @@
             }
         }
 
-
+       
 
         if($.cookie('id_cookie_category') != null){
            $('#id-category').val($.cookie('id_cookie_category')); 
@@ -134,9 +137,22 @@
         cookieDownload('mas_cookie_description', '#description'); 
     }
 
+    /* перевод всех элементов в дргой блок */ 
+    function movingAllChip(parent_container, container ){
+            $.each($(parent_container).children(), 
+            function(i, child){
+                $(container).append(child);  
+            }); 
+        }
 
-
+    
+    /* */     
+    $('.chip-outline').dblclick(function(){
+        $(this).remove();	
+    });     
+  
     </script>
+\
 
 
     <script>
@@ -231,6 +247,9 @@ $('#downloader-setting').click(function(){
         DownloadSettingCookie(); 
 }); 
 
+$('#moving-har').click(function(){
+    movingAllChip('#all', '#har'); 
+}); 
     </script>
 
 

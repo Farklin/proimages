@@ -25,6 +25,14 @@
                 
             {% endfor %}
         </select>
+        <label for="unic-old-price">Полное наименование</label>
+        <select name="all_name_new" id="all_name_new" class="form-control"> 
+        
+            {% for column in context.new_price  %}
+                <option value="{{column.id}}">{{column.name}}</option> 
+                
+            {% endfor %}
+        </select>
     </div>
     <div class="col-sm-6" > 
         <label for="unic-old-price">Наименование</label>
@@ -37,6 +45,22 @@
         </select>
         <label for="price-old-price">Цена</label>
         <select name="price_old" id="price-old-price" class="form-control"> 
+        
+            {% for column in context.old_price  %}
+                <option value="{{column.id}}">{{column.name}}</option> 
+                
+            {% endfor %}
+        </select>
+        <label for="price-old-price">Полное наименование</label>
+        <select name="all_name_old" id="all_name_old" class="form-control"> 
+        
+            {% for column in context.old_price  %}
+                <option value="{{column.id}}">{{column.name}}</option> 
+                
+            {% endfor %}
+        </select>
+        <label for="price-old-price">id</label>
+        <select name="id" id="id" class="form-control"> 
         
             {% for column in context.old_price  %}
                 <option value="{{column.id}}">{{column.name}}</option> 

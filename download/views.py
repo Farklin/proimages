@@ -48,6 +48,8 @@ def view_menu(request):
     
     return render(request, 'menu.html')
 
+# картинки 
+
 def save_image_from_table(request): 
     
 
@@ -56,6 +58,7 @@ def save_image_from_table(request):
 def save_image(request): 
     if request.method == 'POST':
         try:
+
             image = request.POST.get("url_image")
             name = str(image).split('/')[-1] 
             
@@ -66,12 +69,33 @@ def save_image(request):
             image = requests.get(image).content
             
             out = open('media/image/'+ name, "wb")
+
+            _export_excel(image, name)
             out.write(image)
             out.close()
             return HttpResponse (name)
         except: 
+            _export_excel(image, '')
             return HttpResponse (False)
+
+
+def _export_excel(name, new_name):
+
+    try: 
+        book = openpyxl.load_workbook('book.xlsx')
+        sheet = book.active
+
+        max_row = sheet.max_row
+        sheet.cell(row = max_row + 1 , column = 1).value = name 
+        sheet.cell(row = max_row + 1 , column = 2).value = new_name 
+        book.save('book.xlsx')
+        
+    except:
+        book = openpyxl.Workbook() 
+        book.save('book.xlsx')
     
+
+# @ end картинки 
 
 def import_table(request): 
 
@@ -274,7 +298,7 @@ def table_price(request):
     else: 
         return render(request, 'price/table_price.html', {'files': files})
 
-
+#сравнение цен и вывод 
 def price_and_price(request): 
     if request.method == 'POST':
         file_new = request.POST.get('file_new')
@@ -283,13 +307,19 @@ def price_and_price(request):
         name_old = request.POST.get('name_old')
         price_new = request.POST.get('price_new')
         price_old = request.POST.get('price_old')
+        all_name_new= request.POST.get('all_name_new')
+        all_name_old = request.POST.get('all_name_old')
+        id = request.POST.get('id')
 
-        mas_price = f_price(file_new, int(name_new), 30, int(price_new)) 
-        result = f_price_and_price(file_old, int(name_old), 30, int(price_old), mas_price )
+        mas_price = f_price(file_new, int(name_new), int(all_name_new), 30, int(price_new)) 
+        result = f_price_and_price(int(id), file_old, int(name_old), int(all_name_old), 30, int(price_old), mas_price )
         return render(request,'price/modified.html', {'context': result} )
     else: 
         return HttpResponse('False')
 
+
+
+#фильтр для исключения подстроки в строке 
 def analiz_column_table(filename): 
     print(filename)
     book = openpyxl.load_workbook(filename)
@@ -308,7 +338,9 @@ def analiz_column_table(filename):
 
 
 
-def f_price (name_file, name_nomer,old_price_nomer, price_nomer): 
+
+#получение значений нового листа с ценами 
+def f_price (name_file, name_nomer, all_name_nomer ,old_price_nomer, price_nomer): 
     my_path = name_file 
     my_wb_obj = openpyxl.load_workbook(my_path)
     my_sheet_obj = my_wb_obj.active 
@@ -323,22 +355,29 @@ def f_price (name_file, name_nomer,old_price_nomer, price_nomer):
         name_cell = my_sheet_obj.cell(row, name_nomer)
         price_cell = my_sheet_obj.cell(row, price_nomer)
         old_price_cell = my_sheet_obj.cell(row, old_price_nomer)
-
+        all_name_cell = my_sheet_obj.cell(row, all_name_nomer)
        
         if(name_cell.value != None):
             try:
                 p = float(price_cell.value)/10       
                 round_price = math.ceil(p) * 10
-                mas.append({'name': name_cell.value, 'price':  str(round_price) , 'old_price':old_price_cell.value })
+                mas.append({'name': name_cell.value, 'all_name': all_name_cell.value, 'price':  str(round_price) , 'old_price':old_price_cell.value })
  
             except:
-                mas.append({'name': name_cell.value, 'price':  price_cell.value , 'old_price':old_price_cell.value })
+                mas.append({'name': name_cell.value, 'all_name': all_name_cell.value, 'price':  price_cell.value , 'old_price':old_price_cell.value })
 
     return mas 
 
-
-def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_new):
+#сравнение цен 
+def f_price_and_price(id_nomer, name_file, name_nomer, all_name_nomer, old_price_nomer, price_nomer, mas_new):
     result = [] 
+
+    def _fill_cell_color(cell, start_color, end_color): 
+        fill = PatternFill(fill_type='solid',
+                start_color=start_color,
+                end_color=end_color)
+
+        cell.fill = fill
 
     my_path = name_file
     my_wb_obj = openpyxl.load_workbook(my_path)
@@ -355,14 +394,13 @@ def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_n
             name_cell = my_sheet_obj.cell(row, name_nomer)
             price_cell = my_sheet_obj.cell(row, price_nomer)
             old_price_cell = my_sheet_obj.cell(row, old_price_nomer)
+            all_name_cell = my_sheet_obj.cell(row,all_name_nomer)
+            id_cell = my_sheet_obj.cell(row,id_nomer)
 
             if str(row_new['name']) in str(name_cell.value): 
                 if price_cell.value == row_new['price']: 
-                    fill = PatternFill(fill_type='solid',
-                    start_color='fafa23',
-                    end_color='fafa23')
 
-                    price_cell.fill = fill
+                    _fill_cell_color(price_cell,'fafa23', 'fafa23' )
                     count_previous_price += 1
 
                     
@@ -371,8 +409,11 @@ def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_n
                     except: 
                         discrepancy = 'Ошибка'
                     result.append({
+                        'id': id_cell.value, 
                         'name_new': row_new['name'], 
                         'name_old': name_cell.value, 
+                        'all_name_new': row_new['all_name'], 
+                        'all_name_old': all_name_cell.value,  
                         'price_new': row_new['price'], 
                         'price_old': price_cell.value,  
                         'discrepancy': discrepancy, 
@@ -381,13 +422,16 @@ def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_n
 
                 else: 
                     try: 
-                        discrepancy = str(float(price_cell.value.replace(' ', '')) - float(row_new['price'].replace(' ', '')))
+                        discrepancy = str(float(row_new['price'].replace(' ', '')) - float(price_cell.value.replace(' ', '')))
                     except: 
                         discrepancy = 'Ошибка'
 
                     result.append({
+                    'id': id_cell.value,
                     'name_new': row_new['name'], 
                     'name_old': name_cell.value, 
+                    'all_name_new': row_new['all_name'], 
+                    'all_name_old': all_name_cell.value,  
                     'price_new': row_new['price'], 
                     'price_old': price_cell.value,  
                     'discrepancy': discrepancy, 
@@ -395,16 +439,9 @@ def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_n
                     })
                     
                     price_cell.value = row_new['price']
-                    old_price_cell.value = row_new['old_price']
 
-
-                    fill = PatternFill(fill_type='solid',
-                        start_color='f07171',
-                        end_color='f07171')
-
-                    price_cell.fill = fill
-                    old_price_cell.fill = fill
-
+                    _fill_cell_color(price_cell, 'f07171', 'f07171')
+        
                     count_replacement_price += 1
 
                    
@@ -419,3 +456,5 @@ def f_price_and_price(name_file, name_nomer, old_price_nomer, price_nomer, mas_n
 
     return result 
 
+
+            
