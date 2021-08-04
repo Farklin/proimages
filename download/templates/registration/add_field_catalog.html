@@ -170,7 +170,28 @@ function AjaxEditStatus(status)
 
 }
 
-
+$(function()
+  {
+    $('iframe')
+      //observe the load-event of the iframe-element
+      .on('load',
+          function () 
+          {
+            //set a default-input to avoid errors
+            var selectedtextbox=$('input[name="myinput"]:eq(0)');
+            $('input[name="myinput"]')
+              .focus(function(){selectedtextbox=$(this);});
+            //Note the 2nd argument here, 
+            //it sets the contextof $() to the document inside the iframe
+            $('div, p, li, a, href, input',
+              this.contentWindow.document)
+                .click(function () 
+                       { 
+                          var xpath = getXPath(this);
+                          selectedtextbox.val(xpath)
+                       });
+            });
+    });
 
 
 

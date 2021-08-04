@@ -20,8 +20,14 @@
                 {% for catalog in context.catalog %}
                 <tr> 
                     <td> 
-                        <a href="{% url 'registration:create_field_catalog' catalog.id %}" class="w-25"> {{catalog.url}} </a>
-                        <input class="checkStatusCatalog" value ='{% url "registration:status_catalog" catalog.id  %}'  {% if catalog.status %} checked  {% endif %}  type="checkbox"> </a> 
+                        <div class="row">
+                            <div class="col-sm-10"> 
+                                <a href="{% url 'registration:create_field_catalog' catalog.id %}" class="w-25"> {{catalog.url|truncatechars:40}} </a>
+                            </div>
+                            <div class="col-sm-2"> 
+                                <input class="checkStatusCatalog form-check-input p-0" value ='{% url "registration:status_catalog" catalog.id  %}'  {% if catalog.status %} checked  {% endif %}  type="checkbox"> </a> 
+                            </div>
+                        </div>
                     </td>
                 </tr> 
                 {% endfor %} 
