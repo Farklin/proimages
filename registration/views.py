@@ -1,7 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 
-from registration.forms import CatalogForm, CompanyForm
+from registration.forms import CatalogForm, CompanyForm, FieldCompanyFormSet
 # Create your views here.
 from registration.models import Catalog, Company, FieldCatalog
 from selenium.webdriver.chrome.options import Options
@@ -126,12 +126,17 @@ def CreateCompany(request):
             form.save()
             # Get the current instance object to display in the template
             catalog_obj = form.instance
-           
+            fieldcompany_formset = FieldCompanyFormSet(request.POST, instance=catalog_obj)
+
+            if fieldcompany_formset.is_valid():
+                fieldcompany_formset.save()
+
         return redirect('registration:home')
         #render(request, 'upload.html', {'form': form, 'img_obj': img_obj})
     else:
         form = CompanyForm()
-    return render(request, 'registration/add_company.html', {'form': form})
+        fieldcompany_formset = FieldCompanyFormSet()
+    return render(request, 'registration/add_company.html', {'form': form, 'fieldcompany_formset': fieldcompany_formset})
 
 def ViewCompany(request, company_id):
     context =  {

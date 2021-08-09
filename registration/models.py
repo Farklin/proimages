@@ -21,6 +21,7 @@ class FieldCatalog(models.Model):
     value = models.CharField(max_length=500, verbose_name = 'Название поля', default=None, blank=True, null=True)
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
 
+
 class Company(models.Model):
     class Meta:
         verbose_name = 'Компания'
@@ -38,5 +39,9 @@ class Company(models.Model):
     description  = models.TextField(max_length=1000, verbose_name = 'Полное описание', default=None, blank=True, null=True)
     
 
+class FieldCompany(models.Model):
+    key = models.CharField(max_length=30, verbose_name='ключ')
+    value = models.CharField(max_length = 200, verbose_name='значение')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
