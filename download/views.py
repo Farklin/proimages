@@ -397,7 +397,7 @@ def f_price_and_price(id_nomer, name_file, name_nomer, all_name_nomer, old_price
             all_name_cell = my_sheet_obj.cell(row,all_name_nomer)
             id_cell = my_sheet_obj.cell(row,id_nomer)
 
-            if str(row_new['name']) in str(name_cell.value): 
+            if  len(str(row_new['name']))> 3 and str(row_new['name']) in str(name_cell.value): 
                 if price_cell.value == row_new['price']: 
 
                     _fill_cell_color(price_cell,'fafa23', 'fafa23' )

@@ -16,5 +16,7 @@ class CompanyForm(forms.ModelForm):
         'adress', 
         'email', 
         'name_firm', 
-        'name_person',  )
+        'name_person',
+        'description', 
+        'short_description',   )
         
