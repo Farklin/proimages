@@ -12,7 +12,15 @@
     {{context.company.name_person}}<br>
     {{context.company.short_description}}<br>
     {{context.company.description}}<br>
+    {{context.field_company}} <br> 
 
+    <form class="form" method="post" action="{% url 'registration:create_field_company' context.company.id %}">
+    {% csrf_token %}
+    {{ context.formset|crispy }}
+    <button type="submit" class ="btn-primary">
+        Добавить 
+    </button>
+    </form>
 </div>
 
 <div class="container"> 

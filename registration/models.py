@@ -40,6 +40,10 @@ class Company(models.Model):
     
 
 class FieldCompany(models.Model):
+    class Meta:
+        verbose_name = 'Поле компании'
+        verbose_name_plural = 'Поля компании'
+
     key = models.CharField(max_length=30, verbose_name='ключ')
     value = models.CharField(max_length = 200, verbose_name='значение')
     company = models.ForeignKey(Company, on_delete=models.CASCADE)

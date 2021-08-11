@@ -23,4 +23,4 @@ class CompanyForm(forms.ModelForm):
         'short_description'  )
 
 
-FieldCompanyFormSet = inlineformset_factory(Company, FieldCompany, fields=('key','value'), extra=3, can_delete=False)
+FieldCompanyFormSet = inlineformset_factory(Company, FieldCompany, fields=('key','value'), extra=2)

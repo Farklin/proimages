@@ -15,26 +15,7 @@
           {% csrf_token %}
           {{ form |crispy }}
         </div>
-        <div class="col-md-6">
-          {% for form in fieldcompany_formset %}
-
-          <div class="row">
-            <div class="col-md-6">
-              {{ form.key.errors }}
-              {{ form.key |as_crispy_field }}
-    
-            </div>
-            <div class="col-md-6">
-              {{ form.value.errors }}
-              {{ form.value |as_crispy_field }}
-    
-            </div>
            
-            
-          </div>
-          {% endfor %}
-        </div>
-      
       </div>
      
 
