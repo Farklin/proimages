@@ -14,16 +14,69 @@
     {{context.company.description}}<br>
     {{context.field_company}} <br> 
 
-    <form class="form" method="post" action="{% url 'registration:create_field_company' context.company.id %}">
-    {% csrf_token %}
-    {{ context.formset|crispy }}
-    <button type="submit" class ="btn-primary">
-        Добавить 
-    </button>
-    </form>
+    <div class="container control"> 
+        <a class='btn btn-success' href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
+        <button id="btn-add-field-company" class="btn btn-primary">  Добавить поле <i class="fa fa-plus"> </i></button>
+    </div> 
+    
+    <div class="container-field-company">
+        <div class = 'field-company'> 
+           
+        </div>
+       
+    </div>
+   
+
+
 </div>
 
-<div class="container"> 
-    <a class='btn btn-success' href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
-</div> 
+<script> 
+    const csrf = "{{ csrf_token }}";
+    
+    $('#btn-add-field-company').click(function(){
+        row = ` <div class="row">
+                <div class="col-md-5">
+                    <label for="">Ключ</label>
+                    <input type="text" class="form-control"> 
+                </div>   
+                <div class="col-md-5">
+                    <label for="">Значение</label>
+                    <input type="text" class="form-control"> 
+                </div>
+                <div class="col-md-2">
+                    <label for=""></label>
+                <button class="btn-delete-field-company btn btn-danger" onclick="deleteField()"> Удалить </button>
+                </div>
+            </div>` ; 
+        $('.field-company').append(row); 
+        
+    }); 
+    $(".btn-delete-field-company").click(function(){     
+        $(this).closest('.row').remove();
+    });
+
+
+
+    function ajaxCreateFieldCompany(){
+        $.ajax({
+
+            method: "POST", // метод HTTP, используемый для запроса
+            url: "{% url 'registration:create_field_company' context.company.id %}", // строка, содержащая URL адрес, на который отправляется запрос
+            data: { // данные, которые будут отправлены на сервер
+            'csrfmiddlewaretoken':csrf, 
+            
+            },
+
+        }); 
+    }
+
+    
+
+
+</script>
+
+
+
+
+
 {% endblock %}
