@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="justify-content-center p-5">
+
+{% for field in context.fields %}
+
+    <div> {{field.title}} ({{field.key}} ) <a href="{% url 'registration:delete-field-company-key' field.id %}">Удалить</a> </div> 
+
+{% endfor %} 
+</div>
+
+<a class="btn btn-primary" href="{% url 'registration:add-field-company-key' %}"> Добавить поле </a>
+{% endblock %}

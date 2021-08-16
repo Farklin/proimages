@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from registration.models import Catalog, Company, FieldCatalog, FieldCompany
+from registration.models import Catalog, Company, FieldCatalog, FieldCompanyKey, FieldCompanyValue
 # Register your models here.
 
 class CatalogAdmin(admin.ModelAdmin):
@@ -13,5 +13,5 @@ class CompanyAdmin(admin.ModelAdmin):
     
 admin.site.register(Company , CompanyAdmin)
 admin.site.register(FieldCatalog)
-admin.site.register(FieldCompany)
+admin.site.register(FieldCompanyValue)
 #myModels = [Category, Product]

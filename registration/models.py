@@ -37,14 +37,23 @@ class Company(models.Model):
     password = models.CharField(max_length=255, verbose_name = 'Пароль', default=None, blank=True, null=True)
     short_description   = models.TextField(max_length=255, verbose_name = 'Короткое описание', default=None, blank=True, null=True)
     description  = models.TextField(max_length=1000, verbose_name = 'Полное описание', default=None, blank=True, null=True)
-    
 
-class FieldCompany(models.Model):
+
+class FieldCompanyKey(models.Model):
+    class Meta:
+        verbose_name = 'Ключ поля компании'
+        verbose_name_plural = 'Ключи поля компании'
+
+    key = models.CharField(max_length=30, verbose_name='ключ')
+    title = models.CharField(max_length=30, verbose_name='название поля на русском')
+
+
+class FieldCompanyValue(models.Model):
     class Meta:
         verbose_name = 'Поле компании'
         verbose_name_plural = 'Поля компании'
 
-    key = models.CharField(max_length=30, verbose_name='ключ')
+    key = models.ForeignKey(FieldCompanyKey, on_delete=models.CASCADE)
     value = models.CharField(max_length = 200, verbose_name='значение')
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 

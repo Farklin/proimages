@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="container p-5">
+        <div class="row justify-content-center p-5">
+            <div class="col-md-3">
+              
+                <a class="btn btn-primary" href="{% url 'registration:view-field-company-key' %}">Дополнительные поля</a>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

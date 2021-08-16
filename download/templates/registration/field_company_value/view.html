@@ -1,0 +1,119 @@
+<button id="btn-add-field-company" class="btn btn-primary">  Добавить поле <i class="fa fa-plus"> </i></button>
+<div class="container-field-company">
+    <div class = 'field-company'> 
+       {% for field_company in context.field_company %}
+            
+            
+            <div class="row" id="{{field_company.id}}">
+                <div class="col-md-5">
+                    <label for="">Ключ</label>
+                    <input type="text" id="key" value='{{field_company.key}}' disabled="disabled" class="form-control"> 
+                </div>   
+                <div class="col-md-5">
+                    <label for="">Значение</label>
+                    <input type="text" id="value" value='{{field_company.value}}' disabled="disabled" class="form-control"> 
+                </div>
+                <div class="col-md-2">
+                    <label for=""></label> 
+                    <button class="btn-delete_ajax-field-company btn btn-success" > Удалить </button>
+                </div>
+            </div>
+       {% endfor %} 
+    </div>
+   
+</div>
+
+
+
+</div>
+
+<script> 
+const csrf = "{{ csrf_token }}";
+
+$('#btn-add-field-company').click(function(){
+    row = ` <div class="row">
+            <div class="col-md-5">
+                <label for="">Ключ</label>
+                <input type="text" id="key" class="form-control"> 
+            </div>   
+            <div class="col-md-5">
+                <label for="">Значение</label>
+                <input type="text" id="value" class="form-control"> 
+            </div>
+            <div class="col-md-2">
+                <label for=""></label>
+            <button class="btn-delete-field-company btn btn-danger" > Удалить </button>
+            <button class="btn-add_ajax-field-company btn btn-success" > Добавить </button>
+            </div>
+        </div>` ; 
+    $('.field-company').append(row); 
+    
+}); 
+
+
+$(document).on('click', '.btn-delete-field-company', function(){     
+    
+    $(this).closest('.row').remove(); 
+});
+$(document).on('click', '.btn-add_ajax-field-company', function(){     
+    
+
+    
+    key = $(this).closest('.row').find('#key').val(); 
+    value = $(this).closest('.row').find('#value').val(); 
+
+    if(ajaxCreateFieldCompany(key, value)){
+        $(this).closest('.row').find('.form-control').attr('disabled', 'disabled'); 
+        $(this).closest('.row').find('.btn-delete-field-company').remove(); 
+        $(this).remove(); 
+    }
+
+
+
+
+});
+$(document).on('click', '.btn-delete_ajax-field-company', function(){    
+    id_field = $(this).closest('.row').attr('id'); 
+
+    if(ajaxDeleteFieldCompany(id_field)){
+
+        $(this).closest('.row').remove(); 
+
+    }
+
+}); 
+
+function ajaxCreateFieldCompany(key, value){
+    a = $.ajax({
+
+        method: "POST", // метод HTTP, используемый для запроса
+        url: "{% url 'registration:create_field_company' context.company.id %}", // строка, содержащая URL адрес, на который отправляется запрос
+        data: { // данные, которые будут отправлены на сервер
+        'csrfmiddlewaretoken':csrf, 
+        'key':  key,  
+        'value': value,  
+        },
+        }).done(function(data){
+            return data; 
+        }); 
+    return a; 
+}
+function ajaxDeleteFieldCompany(id_field){
+    a = $.ajax({
+
+        method: "POST", // метод HTTP, используемый для запроса
+        url: "{% url 'registration:delete_field_company' %}", // строка, содержащая URL адрес, на который отправляется запрос
+        data: { // данные, которые будут отправлены на сервер
+        'csrfmiddlewaretoken':csrf, 
+        'id_field':  id_field,  
+        },
+        }).done(function(data){
+            return data; 
+        }); 
+    return a; 
+}
+
+
+
+
+</script>

@@ -2,9 +2,9 @@ from django.forms.models import modelformset_factory
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 
-from registration.forms import CatalogForm, CompanyForm, FieldCompanyFormSet
+from registration.forms import CatalogForm, CompanyForm, FieldCompanyKeyForm
 # Create your views here.
-from registration.models import Catalog, Company, FieldCatalog, FieldCompany 
+from registration.models import Catalog, Company, FieldCatalog, FieldCompanyKey, FieldCompanyValue
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager import driver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -20,6 +20,37 @@ def index(request):
     } 
     return render(request, 'registration/home.html', {'context': context})
 
+#настройки проекта 
+def Setting(request): 
+    return render(request, 'registration/setting/setting.html')
+
+
+#дополнительные поля проекта (ключи) 
+def AddFieldCompanyKey(request): 
+    form = FieldCompanyKeyForm()
+    if request.method == 'POST': 
+        form = FieldCompanyKeyForm(request.POST)
+        if form.is_valid(): 
+            form.save() 
+            return redirect('registration:view-field-company-key')
+    
+    context = {'form': form}
+    return render(request, 'registration/field_company_key/add.html', {'context': context} )
+
+
+def DeleteFieldCompanyKey(request, key_id): 
+    try: 
+        FieldCompanyKey.objects.get(id = key_id).delete() 
+        return redirect('registration:view-field-company-key')
+    except: 
+        return HttpResponse(False)
+    
+def ViewFieldCompanyKey(request): 
+    fields = FieldCompanyKey.objects.all()
+    context = {'fields': fields}
+    return render(request, 'registration/field_company_key/view.html', {'context': context } )
+
+# end дополнительные поля проекта (ключи)
 
 def CreateCatalog(request):
     if request.method == 'POST':
@@ -137,24 +168,35 @@ def CreateCompany(request):
     return render(request, 'registration/add_company.html', {'form': form,})
 
 
-def ViewFieldCompany(request, company_id): 
-    FieldCompanyFormSet = modelformset_factory(FieldCompany, fields = ('key', 'value'), extra = 2 ) 
-    form = FieldCompanyFormSet()
+def CreateFieldCompany(request, company_id): 
+    # требуется переделать 
     if request.method == 'POST': 
+        key = request.POST.get('key') 
+        value = request.POST.get('value') 
+        company = Company.objects.get(id = company_id)
+        fieldcompany = FieldCompany(key = key, value = value, company = company)
+        fieldcompany.save()
+        return HttpResponse(True)
+    
+    return HttpResponse(False)
+
+def DeleteFieldCompany(request): 
+      # требуется переделать 
+    if request.method == 'POST': 
+        id_field = request.POST.get('id_field') 
         
-        form = FieldCompanyFormSet(request.POST, initial = Company.objects.get(id=company_id))
-       
-        if form.is_valid():
-            form.save() 
+        fieldcompany = FieldCompany.objects.get(id =id_field)
+        fieldcompany.delete()
+        return HttpResponse(True)
+    
+    return HttpResponse(False)
 
-    else: 
-        return form
-
-
+#Вывод компании 
 def ViewCompany(request, company_id):
+    company = Company.objects.get(id=company_id)
     context =  {
-        'company': Company.objects.get(id=company_id), 
-        'formset': ViewFieldCompany(request, company_id), 
+        'company': company, 
+        'field_company': FieldCompanyValue.objects.filter(company=company), 
     }
 
     return render(request, 'registration/view_company.html', {'context': context})

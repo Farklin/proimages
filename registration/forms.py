@@ -1,4 +1,4 @@
-from registration.models import Catalog, Company, FieldCompany
+from registration.models import Catalog, Company, FieldCompanyKey, FieldCompanyValue
 from django import forms
 from django.forms import inlineformset_factory
 
@@ -22,5 +22,7 @@ class CompanyForm(forms.ModelForm):
         'description', 
         'short_description'  )
 
-
-FieldCompanyFormSet = inlineformset_factory(Company, FieldCompany, fields=('key','value'), extra=2)
+class FieldCompanyKeyForm(forms.ModelForm):
+    class Meta: 
+        model = FieldCompanyKey
+        fields = ('key', 'title', )
