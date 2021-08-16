@@ -1,3 +1,4 @@
+from typing import Tuple
 from django.forms.models import modelformset_factory
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
@@ -73,6 +74,8 @@ def CreataFieldCatalog(request, catalog_id):
     company = Company._meta.get_fields()
     company = [field.name for field in Company._meta.get_fields()]
     fields = FieldCatalog.objects.filter(catalog = catalog)
+    field_company = FieldCompanyKey.objects.all() 
+
 
     if request.method == 'POST':
         location = request.POST.get('location')
@@ -97,6 +100,7 @@ def CreataFieldCatalog(request, catalog_id):
         'catalog': catalog,
         'company': company, 
         'fields': fields, 
+        'field_company': field_company, 
     }
 
 
@@ -122,11 +126,29 @@ def HadlerCompany(request, company_id):
                 element = driver.find_element_by_xpath(field.location)
                 element.clear() 
                 try: 
-                    element.send_keys(getattr(company, field.value, '').replace('  ', ''))
+                    value = getattr(company, field.value, '').replace('  ', '')
+                    if value != '':
+                        element.send_keys(value)
+                    else: 
+                        try:
+                            key = FieldCompanyKey.objects.get(key=field.value)
+                            value = FieldCompanyValue.objects.filter(key = key, company = company)[0]
+                            element.send_keys(value.value)
+                        except: 
+                            pass
                 except: 
-                    pass 
+                    pass
+                    
+              
+                
+                   
     
     return redirect('registration:home')
+
+def DeleteCompany(request, company_id): 
+    Company.objects.get(id=company_id).delete()
+    return redirect('registration:home')
+
 
 
 def CheckHadler(request, catalog_id): 
@@ -168,28 +190,37 @@ def CreateCompany(request):
     return render(request, 'registration/add_company.html', {'form': form,})
 
 
-def CreateFieldCompany(request, company_id): 
-    # требуется переделать 
-    if request.method == 'POST': 
-        key = request.POST.get('key') 
-        value = request.POST.get('value') 
-        company = Company.objects.get(id = company_id)
-        fieldcompany = FieldCompany(key = key, value = value, company = company)
-        fieldcompany.save()
-        return HttpResponse(True)
-    
+def AddFieldCompanyValue(request): 
+    if request.method == 'POST':
+        id_key = request.POST.get('id_key')
+        value = request.POST.get('value')
+        id_company = request.POST.get('id_company')
+
+        company = Company.objects.get(id = id_company)
+        key = FieldCompanyKey.objects.get(id = id_key)
+        
+        field = FieldCompanyValue()
+        field.value = value
+        field.company = company
+        field.key = key 
+
+        field.save() 
+        return HttpResponse( True )
+
     return HttpResponse(False)
 
-def DeleteFieldCompany(request): 
-      # требуется переделать 
-    if request.method == 'POST': 
-        id_field = request.POST.get('id_field') 
-        
-        fieldcompany = FieldCompany.objects.get(id =id_field)
-        fieldcompany.delete()
+def DeleteFieldCompanyValue(request): 
+    if request.method == 'POST':
+        FieldCompanyValue.objects.get(id = request.POST.get('id_field')).delete()
         return HttpResponse(True)
-    
     return HttpResponse(False)
+
+
+def UpdateFieldCompanyValue(request): 
+
+    return HttpResponse(False)
+
+
 
 #Вывод компании 
 def ViewCompany(request, company_id):
@@ -197,6 +228,7 @@ def ViewCompany(request, company_id):
     context =  {
         'company': company, 
         'field_company': FieldCompanyValue.objects.filter(company=company), 
+        'all_field_key': FieldCompanyKey.objects.all(), 
     }
 
     return render(request, 'registration/view_company.html', {'context': context})

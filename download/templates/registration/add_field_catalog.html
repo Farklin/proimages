@@ -25,6 +25,19 @@
                     <option value="{{item}}"> {{item}}</option>
                     {% endif %}
                 {% endfor %} 
+
+               
+                    
+                {% for item in context.field_company %}
+                    {% if item.key == field.value %} 
+                    <option selected="selected" value="{{item.key}}"> {{item.title}}</option>
+                    {% else %}
+                    <option value="{{item.key}}"> {{item.title }}</option>
+                    {% endif %}
+                {% endfor %} 
+           
+             
+
                 </select> 
              
         </div>
@@ -34,6 +47,7 @@
        
         </div>
 {% endfor %}
+
 </div>
 
 
@@ -66,6 +80,9 @@
         {% for item in context.company %}
             <option value="{{item}}"> {{item}}</option>
         {% endfor %} 
+        {% for item in context.field_company %}
+            <option value="{{item.key}}"> {{item.title}}</option>
+        {% endfor %} 
         </select> 
     
     
@@ -85,11 +102,13 @@
 </script>
 
 <script type="text/javascript"> 
+
+    
      $('#save-input').click(function(){
          $.each($('.select-name'), function(index, value){
              var location = $('.input-location')[index].value
              n = value.options.selectedIndex;  
-             var name = value.options[n].text; 
+             var name = value.options[n].value;  
              if(location != '')
              {
                 AjaxAddFindCatalog(location, name); 
@@ -136,7 +155,6 @@ function AjaxDeleteFindCatalog(location)
         }); 
 
 }
-
 function AjaxCheckhadler()
 {    
     
@@ -155,7 +173,6 @@ function AjaxCheckhadler()
     
 
 }
-
 function AjaxEditStatus(status)
 {   /* изменение статуса каталога */ 
     const csrf = "{{ csrf_token }}";

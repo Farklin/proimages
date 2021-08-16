@@ -3,8 +3,16 @@
 {% block content %}
 
 
+
 <div class="container p-5">
-       
+    
+    <p>
+        Для добавления дополнительных полей нужно перейти на страницу настройки. <br> 
+        Не рекомендуется жать 1 млн раз на кнопке если что то не сработало.  <br> 
+        Сайт не несет ответственность за истребление всего человечества и действия третьих лиц.  <br> 
+    
+    </p> 
+    
         <a class='btn btn-primary' href="{% url 'registration:create_catalog' %}"> Создать каталог </a> 
         <a class='btn btn-success' href="{% url 'registration:create_company' %}"> Создать компанию </a> 
         
@@ -41,8 +49,15 @@
                  <table class="table table-hover">
                  {% for company in context.company %}
                 <tr> 
-                    <td> 
-                        <a href="{% url 'registration:view_company' company.id %}"> {{company.name_firm}} </a>
+                    <td class="row"> 
+                        <div class="col-md-8">
+                            <a href="{% url 'registration:view_company' company.id %}"> {{company.name_firm}} </a>    
+                        </div>
+                        <div class="col-md-4">
+                            <a class="text-danger" href="{% url 'registration:delete_company' company.id %}"> Ликвидация </a>
+                        </div>
+
+                       
                     </td>
                 </tr> 
                 {% endfor %} 

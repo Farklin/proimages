@@ -1,4 +1,7 @@
-<button id="btn-add-field-company" class="btn btn-primary">  Добавить поле <i class="fa fa-plus"> </i></button>
+
+
+
+
 <div class="container-field-company">
     <div class = 'field-company'> 
        {% for field_company in context.field_company %}
@@ -7,7 +10,7 @@
             <div class="row" id="{{field_company.id}}">
                 <div class="col-md-5">
                     <label for="">Ключ</label>
-                    <input type="text" id="key" value='{{field_company.key}}' disabled="disabled" class="form-control"> 
+                    <input type="text" id="key" value='{{field_company.key.title}}' disabled="disabled" class="form-control"> 
                 </div>   
                 <div class="col-md-5">
                     <label for="">Значение</label>
@@ -15,14 +18,14 @@
                 </div>
                 <div class="col-md-2">
                     <label for=""></label> 
-                    <button class="btn-delete_ajax-field-company btn btn-success" > Удалить </button>
+                    <button class="btn-delete_ajax-field-company btn btn-danger" > Удалить </button>
                 </div>
             </div>
        {% endfor %} 
     </div>
    
 </div>
-
+<button id="btn-add-field-company" class="btn btn-primary">  Добавить поле <i class="fa fa-plus"> </i></button>
 
 
 </div>
@@ -34,8 +37,15 @@ $('#btn-add-field-company').click(function(){
     row = ` <div class="row">
             <div class="col-md-5">
                 <label for="">Ключ</label>
-                <input type="text" id="key" class="form-control"> 
-            </div>   
+
+                <select id="key" class="form-control form-control">
+
+                {% for fiel_key in context.all_field_key %}
+                    <option value="{{fiel_key.id}}">{{fiel_key.title  }} ({{fiel_key.key}})</option>
+                {% endfor %}
+                </select>
+
+            </div>    
             <div class="col-md-5">
                 <label for="">Значение</label>
                 <input type="text" id="value" class="form-control"> 
@@ -61,8 +71,9 @@ $(document).on('click', '.btn-add_ajax-field-company', function(){
     
     key = $(this).closest('.row').find('#key').val(); 
     value = $(this).closest('.row').find('#value').val(); 
+    company = "{{context.company.id}}"; 
 
-    if(ajaxCreateFieldCompany(key, value)){
+    if(ajaxCreateFieldCompany(key, value, company)){
         $(this).closest('.row').find('.form-control').attr('disabled', 'disabled'); 
         $(this).closest('.row').find('.btn-delete-field-company').remove(); 
         $(this).remove(); 
@@ -83,15 +94,16 @@ $(document).on('click', '.btn-delete_ajax-field-company', function(){
 
 }); 
 
-function ajaxCreateFieldCompany(key, value){
+function ajaxCreateFieldCompany(id_key, value, id_company){
     a = $.ajax({
 
         method: "POST", // метод HTTP, используемый для запроса
-        url: "{% url 'registration:create_field_company' context.company.id %}", // строка, содержащая URL адрес, на который отправляется запрос
+        url: "{% url 'registration:add-field-company-value' %}", // строка, содержащая URL адрес, на который отправляется запрос
         data: { // данные, которые будут отправлены на сервер
         'csrfmiddlewaretoken':csrf, 
-        'key':  key,  
-        'value': value,  
+        'id_key': key,  
+        'value': value, 
+        'id_company': id_company, 
         },
         }).done(function(data){
             return data; 
@@ -102,7 +114,7 @@ function ajaxDeleteFieldCompany(id_field){
     a = $.ajax({
 
         method: "POST", // метод HTTP, используемый для запроса
-        url: "{% url 'registration:delete_field_company' %}", // строка, содержащая URL адрес, на который отправляется запрос
+        url: "{% url 'registration:delete-field-company-value' %}", // строка, содержащая URL адрес, на который отправляется запрос
         data: { // данные, которые будут отправлены на сервер
         'csrfmiddlewaretoken':csrf, 
         'id_field':  id_field,  

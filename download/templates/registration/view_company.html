@@ -3,22 +3,29 @@
 {% block content %}
 
 <div class="container p-5 m-5">
-    {{context.company.url}}<br>
-    {{context.company.phone}}<br>
-    {{context.company.time}}<br>
-    {{context.company.adress}}<br>
-    {{context.company.email}}<br>
-    {{context.company.name_firm}}<br>
-    {{context.company.name_person}}<br>
-    {{context.company.short_description}}<br>
-    {{context.company.description}}<br>
+    <div class="row">
+        <div class="col-md-8">
+            <strong>URL Компании</strong> {{context.company.url}}<br>
+            <strong>Телефон</strong> {{context.company.phone}}<br>
+            <strong>Время работы</strong> {{context.company.time}}<br>
+            <strong>Адрес</strong> {{context.company.adress}}<br>
+            <strong>Email</strong> {{context.company.email}}<br>
+            <strong>Название фирмы</strong> {{context.company.name_firm}}<br>
+            <strong>Личность</strong> {{context.company.name_person}}<br>
+            <strong>Краткое описание</strong> {{context.company.short_description}}<br>
+            <strong>Полное описание</strong> {{context.company.description}}<br>
+        </div>
+        <div class="col-md-4">
 
-    <div class="container control"> 
-        <a class='btn btn-success' href="{% url 'registration:hadler_company' context.company.id %} ">Обработать</a>
-       
-    </div> 
+            <div class="container control"> 
+                <a class='btn '  href="{% url 'registration:hadler_company' context.company.id %} "><i class="fa fa-fire text-danger"></i> Поработить справочные системы</a>
+            </div> 
+        </div>
+    </div>
     
-    
+
+     
+    {% include 'registration/field_company_value/view.html' %}
   
 
 
