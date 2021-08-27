@@ -36,6 +36,7 @@
                <div class="col-sm-6">
                 <h3>Изображения</h3>
                    <div id="image"  class="d-flex border"></div>
+                   <label for="image_split">Название картинки с делителем</label><input type="checkbox" id='image_split'>
                </div>
             </div>
         </div>
@@ -196,7 +197,13 @@
 
     $('#create').click(function(){
 
-       
+        var mas_image = []; 
+        var mas_har = []; 
+        var mas_id = []; 
+        var mas_name = []; 
+        var mas_description = []; 
+        var id_category = 0
+
 
         $.each($('#image').children() , function(index, value){
             mas_image.push(value.id); 
@@ -221,7 +228,16 @@
         });
         id_category = $('#id-category').val() 
         id_cookie_category = $('#id-category').val() 
-        
+
+
+        if ($('#image_split').is(':checked')){
+            image_split = true;
+        } else {
+            image_split = false;
+        }
+
+
+        console.log( image_split); 
         $.ajax({
 	      method: "POST", // метод HTTP, используемый для запроса
 	      url: "{% url 'import_product' filename %}", // строка, содержащая URL адрес, на который отправляется запрос
@@ -233,7 +249,8 @@
             'mas_name': mas_name, 
             'mas_description': mas_description, 
             'id_category': id_category, 
-
+            'image_split': image_split,  
+    
 	      },
 	     
         }); 

@@ -137,6 +137,7 @@ def import_product(request, filename):
         mas_name = request.POST.getlist("mas_name[]")
         mas_description = request.POST.getlist("mas_description[]")
         id_category = request.POST.get('id_category') 
+        image_split = request.POST.get('image_split')
 
         unics = [] 
         names = [] 
@@ -156,23 +157,48 @@ def import_product(request, filename):
     
         if  mas_description != []: 
             for row in export(file, mas_description): 
-                description.append(row[mas_description[0]]) 
+                description.append(row[mas_description[0]])
 
         if mas_image != []: 
             book = openpyxl.Workbook() 
             sheet = book.active 
             
             count_row = 1
-            
-            for i, row in enumerate(export(file, mas_image)) : 
-                
-                for id_column_image in mas_image:
-                    if row[id_column_image] != None and unics[i] != None: 
-                        
-                        sheet.cell(row = count_row, column = 2 ).value = row[id_column_image]
-                        sheet.cell(row = count_row, column = 1 ).value = unics[i]
-                        sheet.cell(row = count_row, column = 3 ).value = names[i]
-                        count_row += 1 
+            print(image_split)
+            if image_split == 'true': 
+                #если картинки с делителем 
+
+                for i, row in enumerate(export(file, mas_image)) : 
+                    for id_column_image in mas_image:
+                        if row[id_column_image] != None and unics[i] != None: 
+                            try:  
+                                for image_split in row[id_column_image].split(';'): 
+                                    sheet.cell(row = count_row, column = 2 ).value = image_split
+                                    sheet.cell(row = count_row, column = 1 ).value = unics[i]
+                                    sheet.cell(row = count_row, column = 3 ).value = names[i]
+                                    count_row += 1
+                            except: 
+                                sheet.cell(row = count_row, column = 2 ).value = row[id_column_image]
+                                sheet.cell(row = count_row, column = 1 ).value = unics[i]
+                                sheet.cell(row = count_row, column = 3 ).value = names[i]
+                                count_row += 1
+
+                #  конец если картинки с делителем 
+            else: 
+
+                # если картинки без делителя 
+
+                for i, row in enumerate(export(file, mas_image)) : 
+                    for id_column_image in mas_image:
+                        if row[id_column_image] != None and unics[i] != None: 
+                            
+                            sheet.cell(row = count_row, column = 2 ).value = row[id_column_image]
+                            sheet.cell(row = count_row, column = 1 ).value = unics[i]
+                            sheet.cell(row = count_row, column = 3 ).value = names[i]
+                            count_row += 1 
+
+                #  конец если картинки без делителя
+
 
             book.save(filename + '_image.xlsx')
 
@@ -193,10 +219,19 @@ def import_product(request, filename):
             for row_id, row in enumerate(export(file, mas_har, 'har')) : 
                 sheet.cell(row = count_row, column = 1 ).value = unics[row_id]
                 sheet.cell(row = count_row, column = 2 ).value = names[row_id]
-                sheet.cell(row = count_row, column = 3 ).value = description[row_id]
+                
+                try: 
+                    sheet.cell(row = count_row, column = 3 ).value = description[row_id]
+                except: 
+                    sheet.cell(row = count_row, column = 3).value = '' 
+
                 sheet.cell(row = count_row, column = 4 ).value = str(id_category)
 
-                sheet.cell(row = count_row, column = 5 ).value = translit(names[row_id] + '-' + str(row_id) + '-' +  str(unics[row_id]),'ru', reversed=True).lower().replace(" ", "-").replace("'", "").replace(",", "").replace(".", "")
+                try:
+                    sheet.cell(row = count_row, column = 5 ).value = translit(names[row_id] + '-' + str(row_id) + '-' +  str(unics[row_id]),'ru', reversed=True).lower().replace(" ", "-").replace("'", "").replace(",", "").replace(".", "")
+                except: 
+                    sheet.cell(row = count_row, column = 5 ).value = '' 
+                
                 har = '' 
                 
                 for i, id_column_har in enumerate(mas_har):
