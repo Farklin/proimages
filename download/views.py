@@ -97,12 +97,14 @@ def _export_excel(name, new_name):
 
 # @ end картинки 
 
+
+# загрузка файлов xlsx 
 def import_table(request): 
 
     files = [] 
     for file in os.listdir("media/"):
         if file.endswith(".xlsx"):
-            files.append(file.replace('.xlsx', ''))
+            files.append(file.replace('.xlsx', '').replace("'", ""))
 
     filename = '' 
     if request.method == 'POST':
@@ -121,6 +123,9 @@ def import_table(request):
             return render(request, 'product/import_table.html', {'files': files})  
     else: 
         return render(request, 'product/import_table.html', {'files': files})
+
+
+
 
 def delete_file_xlsx(request, filename): 
     os.remove('media/' + filename + '.xlsx')
